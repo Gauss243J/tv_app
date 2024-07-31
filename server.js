@@ -1172,7 +1172,7 @@ app.get('/myPlaylist', (req, res) => {
 
 
 
-
+/*
 app.get('/myPlaylistes', (req, res) => {
     if (req.session.user_id && req.session.role === 'tv') {
         // Retrieve TV details
@@ -1312,10 +1312,153 @@ app.put('/updateTVStatus/:tvId', (req, res) => {
             res.status(200).json({ status: 'success', message: 'TV status updated successfully' });
         }
     );
+});*/
+
+
+
+
+
+/*******************APPLICATION ***********************/
+app.post("/loginApp", (req, res) => {
+    const { email, password, name } = req.body;
+
+    if ((!email || !password) && !name) {
+        return res.status(400).json({ error: "Please fill all fields" });
+    }
+
+    if (email && password) {
+        // Admin login
+        database.collection("users").findOne({ email }, (error1, user) => {
+            if (error1) {
+                console.log(error1);
+                return res.status(500).json({ error: "Internal Server Error" });
+            }
+
+            if (user == null) {
+                return res.status(404).json({ error: "Email does not exist" });
+            } else {
+                bcrypt.compare(password, user.password, (error2, result) => {
+                    if (result) {
+                        req.session.user_id = user._id;
+                        req.session.role = user.role;
+                        res.json({ userId: user._id, role: user.role });
+                    } else {
+                        res.status(401).json({ error: "Password is not correct" });
+                    }
+                });
+            }
+        });
+    } else if (name) {
+        // TV login
+        database.collection("tvs").findOne({ name }, (error1, tv) => {
+            if (error1) {
+                console.log('Error finding TV:', error1);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            } else if (!tv) {
+                return res.status(404).json({ error: "TV not found" });
+            } else {
+                req.session.user_id = tv._id;
+                req.session.role = 'tv';
+                res.json({ userId: tv._id, role: 'tv' });
+            }
+        });
+    }
+});
+
+
+app.get("/home", (req, res) => {
+    if (req.session.user_id && req.session.role === 'tv') {
+        const tvId = req.session.user_id;
+
+        database.collection('tvs').findOne({ _id: new ObjectId(tvId) }, (error, tv) => {
+            if (error) {
+                console.log('Error fetching TV:', error);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            } else if (tv) {
+                res.json(tv);
+            } else {
+                res.status(404).json({ error: 'TV not found' });
+            }
+        });
+    } else {
+        res.status(401).json({ error: 'Unauthorized' });
+    }
+});
+
+
+app.get('/My-Playlistes', (req, res) => {
+    if (req.session.user_id && req.session.role === 'tv') {
+        database.collection('tvs').findOne({ _id: new ObjectId(req.session.user_id) }, (error, tv) => {
+            if (error) {
+                console.log('Error fetching TV:', error);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            } else if (tv) {
+                database.collection('playlists').findOne({ _id: new ObjectId(tv.playlist) }, (err, playlist) => {
+                    if (err) {
+                        console.log('Error fetching playlist:', err);
+                        return res.status(500).json({ error: 'Internal Server Error' });
+                    } else if (playlist) {
+                        database.collection('videos').find({ _id: { $in: playlist.videos.map(id => new ObjectId(id)) } }).toArray((err, videos) => {
+                            if (err) {
+                                console.log('Error fetching videos:', err);
+                                return res.status(500).json({ error: 'Internal Server Error' });
+                            } else {
+                                const playlistLinks = videos.map(video => ({
+                                    url: video.filePath,
+                                    filename: video.filePath.split('/').pop()
+                                }));
+                                res.json(playlistLinks);
+                            }
+                        });
+                    } else {
+                        res.status(404).json({ error: 'Playlist not found' });
+                    }
+                });
+            } else {
+                res.status(404).json({ error: 'TV not found' });
+            }
+        });
+    } else {
+        res.status(401).json({ error: 'Unauthorized' });
+    }
 });
 
 
 
+app.put('/updateTVStatus/:tvId', (req, res) => {
+    const tvId = req.params.tvId;
+    const { internetConnectionStatus, batteryStatus, brand } = req.body;
+
+    if (!ObjectId.isValid(tvId)) {
+        return res.status(400).json({ status: 'error', message: 'Invalid TV ID.' });
+    }
+
+    const updateData = {};
+    if (internetConnectionStatus !== undefined) updateData.connectionStatus = internetConnectionStatus;
+    if (batteryStatus !== undefined) updateData.powerStatus = batteryStatus;
+    if (brand) updateData.brand = brand;
+
+    database.collection('tvs').updateOne(
+        { _id: ObjectId(tvId) },
+        { $set: updateData },
+        (err, result) => {
+            if (err) {
+                console.error('Error updating TV status:', err);
+                return res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+            }
+
+            if (result.matchedCount === 0) {
+                return res.status(404).json({ status: 'error', message: 'TV not found' });
+            }
+
+            res.status(200).json({ status: 'success', message: 'TV status updated successfully' });
+        }
+    );
+});
+
+
+
+              
 
 
 
