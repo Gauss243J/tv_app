@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Playlist</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #videoPlayer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            right: auto;
+            z-index: 100;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <% if (videos.length > 0) { %>
+        <video id="videoPlayer" controls autoplay>
+            <% videos.forEach(video => { %>
+                <source src="<%= video.filePath %>" type="video/mp4">
+            <% }) %>
+            Your browser does not support the video tag.
+        </video>
+    <% } else { %>
+        <p>No videos available in this playlist.</p>
+    <% } %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const sources = videoPlayer.getElementsByTagName('source');
+        let currentIndex = 0;
+
+        function playNextVideo() {
+            if (sources.length > 0) {
+                currentIndex = (currentIndex + 1) % sources.length;
+                videoPlayer.src = sources[currentIndex].src;
+                videoPlayer.play();
+            }
+        }
+
+        videoPlayer.addEventListener('ended', playNextVideo);
+    </script>
+</body>
+</html>
+

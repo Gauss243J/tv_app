@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlists</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Admin Dashboard</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Playlists</h2>
+
+        <% if (error && error !== "") { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <% if (success && success !== "") { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <!-- Search and Date Filter Form -->
+        <form method="GET" action="/playlists" class="mb-4">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="search">Search</label>
+                    <input type="text" class="form-control" name="search" value="<%= search %>" placeholder="Search by title or description">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" class="form-control" name="startDate" value="<%= startDate %>">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="endDate">End Date</label>
+                    <input type="date" class="form-control" name="endDate" value="<%= endDate %>">
+                </div>
+                <div class="form-group col-md-2">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="btn btn-primary form-control">Apply Filters</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Display Playlists -->
+        <ul class="list-group">
+            <% playlists.forEach(function (playlist) { %>
+                <li class="list-group-item">
+                    <a href="/playlist/<%= playlist._id %>"><%= playlist.title %></a>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/home">TV Dashboard</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>TV Details</h1>
+        <div>
+            <h2><%= tv.name %></h2>
+            <p><strong>Location:</strong> <%= tv.location %></p>
+            <p><strong>Brand:</strong> <%= tv.brand %></p>
+            <p><strong>Connection Status:</strong> <%= tv.connectionStatus %></p>
+            <p><strong>Power Status:</strong> <%= tv.powerStatus %></p>
+        </div>
+        
+        <h3>Videos in Playlist</h3>
+        <div class="row">
+            <% if (videos.length > 0) { %>
+                <% videos.forEach(function(video) { %>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img src="<%= video.thumbnail %>" class="card-img-top" alt="<%= video.title %> Thumbnail">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= video.title %></h5>
+                                <p class="card-text"><%= video.description %></p>
+                                <a href="/viewVideoTv/<%= video._id %>" class="btn btn-primary" target="_blank">Watch Video</a>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p><%= error %></p>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

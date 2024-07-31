@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= video.title %> - Video Player</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Admin Dashboard</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container mt-5">
+        <h1><%= video.title %></h1>
+        <p><%= video.description %></p>
+
+        <video width="100%" controls autoplay>
+            <source src="<%= video.filePath  %>" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <p>Category: <%= video.category %></p>
+        <p>Duration: <%= video.hours %>h <%= video.minutes %>m <%= video.seconds %>s</p>
+        <p>Views: <%= video.views %></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

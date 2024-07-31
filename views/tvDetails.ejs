@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Admin Dashboard</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>TV Details</h2>
+
+        <% if (error && error !== "") { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <% if (success && success !== "") { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <form action="/assignPlaylist" method="POST">
+            <input type="hidden" name="tv_id" value="<%= tv._id %>">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" value="<%= tv.name %>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" class="form-control" value="<%= tv.location %>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Brand</label>
+                <input type="text" class="form-control" value="<%= tv.brand %>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Connection Status</label>
+                <input type="text" class="form-control" value="<%= tv.connectionStatus %>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Power Status</label>
+                <input type="text" class="form-control" value="<%= tv.powerStatus %>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Playlist</label>
+                <select name="playlist" class="form-control">
+                    <option value="">Select playlist</option>
+                    <% playlists.forEach(function (playlist) { %>
+                        <option value="<%= playlist._id %>" <%= tv.playlist && tv.playlist.equals(playlist._id) ? "selected" : "" %>>
+                            <%= playlist.title %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Playlist</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
