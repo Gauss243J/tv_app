@@ -1386,42 +1386,66 @@ app.get("/home", (req, res) => {
 });
 
 
-app.get('/My-Playlistes', (req, res) => {
-    if (req.session.user_id && req.session.role === 'tv') {
-        database.collection('tvs').findOne({ _id: new ObjectId(req.session.user_id) }, (error, tv) => {
-            if (error) {
-                console.log('Error fetching TV:', error);
-                return res.status(500).json({ error: 'Internal Server Error' });
-            } else if (tv) {
-                database.collection('playlists').findOne({ _id: new ObjectId(tv.playlist) }, (err, playlist) => {
-                    if (err) {
-                        console.log('Error fetching playlist:', err);
-                        return res.status(500).json({ error: 'Internal Server Error' });
-                    } else if (playlist) {
-                        database.collection('videos').find({ _id: { $in: playlist.videos.map(id => new ObjectId(id)) } }).toArray((err, videos) => {
-                            if (err) {
-                                console.log('Error fetching videos:', err);
-                                return res.status(500).json({ error: 'Internal Server Error' });
-                            } else {
-                                const playlistLinks = videos.map(video => ({
-                                    url: video.filePath,
-                                    filename: video.filePath.split('/').pop()
-                                }));
-                                res.json(playlistLinks);
-                            }
-                        });
-                    } else {
-                        res.status(404).json({ error: 'Playlist not found' });
-                    }
-                });
-            } else {
-                res.status(404).json({ error: 'TV not found' });
-            }
-        });
-    } else {
-        res.status(401).json({ error: 'Unauthorized' });
+// POST /My-Playlistes - Retrieve playlist for a specific TV
+app.post('/My-Playlistes', (req, res) => {
+    const { id, role } = req.body;
+
+    if (!id || !role) {
+        return res.status(400).json({ error: 'Missing parameters' });
     }
+
+    if (role !== 'tv') {
+        return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    // Retrieve TV details
+    database.collection('tvs').findOne({ _id: new ObjectId(id) }, (error, tv) => {
+        if (error) {
+            console.log('Error fetching TV:', error);
+            return res.status(500).send('Internal Server Error');
+        } else if (tv) {
+            // Retrieve playlist details
+            database.collection('playlists').findOne({ _id: new ObjectId(tv.playlist) }, (err, playlist) => {
+                if (err) {
+                    console.log('Error fetching playlist:', err);
+                    return res.status(500).send('Internal Server Error');
+                } else if (playlist) {
+                    // Retrieve videos associated with the playlist
+                    database.collection('videos').find({ _id: { $in: playlist.videos.map(id => new ObjectId(id)) } }).toArray((err, videos) => {
+                        if (err) {
+                            console.log('Error fetching videos:', err);
+                            return res.status(500).send('Internal Server Error');
+                        } else {
+                            // Initialize the array to hold transformed video data
+                            const playlistLinks = [];
+
+                            // Regular expression to extract filename from filePath
+                            const regex = /\/([^/]*)$/;
+
+                            // Transform video data
+                            videos.forEach(video => {
+                                const filenameMatch = (video.filePath).match(regex);
+                                const filename = filenameMatch ? filenameMatch[1] : 'unknown.mp4'; // Fallback filename if no match
+                                playlistLinks.push({
+                                    url: video.filePath,
+                                    filename: filename
+                                });
+                            });
+
+                            // Send the transformed video data as JSON response
+                            res.json(playlistLinks);
+                        }
+                    });
+                } else {
+                    res.status(404).send('Playlist not found');
+                }
+            });
+        } else {
+            res.status(404).send('TV not found');
+        }
+    });
 });
+
 
 
 
