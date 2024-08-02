@@ -1386,9 +1386,9 @@ app.get("/home", (req, res) => {
 });
 
 
-// POST /My-Playlistes - Retrieve playlist for a specific TV
-app.post('/My-Playlistes', (req, res) => {
-    const { id, role } = req.body;
+// GET /My-Playlistes - Retrieve playlist for a specific TV
+app.get('/My-Playlistes', (req, res) => {
+    const { id, role } = req.query; // Use req.query to get query parameters
 
     if (!id || !role) {
         return res.status(400).json({ error: 'Missing parameters' });
