@@ -1359,7 +1359,7 @@ app.post("/loginApp", (req, res) => {
             } else {
                 req.session.user_id = tv._id;
                 req.session.role = 'tv';
-                res.json({ userId: tv._id, role: 'tv' });
+                res.json({ id: tv._id, role: 'tv' });
             }
         });
     }
