@@ -14,7 +14,8 @@ const path = require('path');
 const { getVideoDurationInSeconds } = require('get-video-duration');
 
           
-require('dotenv').config({ path: './Config.env' });
+//require('dotenv').config({ path: './Config.env' });
+require('dotenv').config();
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -549,6 +550,7 @@ app.post('/upload', (req, res) => {
 
     const form = new formidable.IncomingForm();
     form.keepExtensions = true;
+    console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
