@@ -542,9 +542,93 @@ app.post('/uploads', (req, res) => {
     }
 });
 
-
-
 app.post('/upload', (req, res) => {
+    if (!req.session || !req.session.user_id) {
+        return res.status(401).json({ status: 'error', message: 'Please login to perform this action.' });
+    }
+
+    const form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+
+    form.parse(req, async (err, fields, files) => {
+        if (err) {
+            console.error('Error parsing form:', err);
+            return res.status(500).send('Error processing form data.');
+        }
+
+        const { title, description, tags, category } = fields;
+        const videoFile = files.video;
+        const thumbnailFile = files.thumbnail;
+
+        if (!videoFile || !thumbnailFile) {
+            console.error('Missing video or thumbnail files');
+            return res.status(400).send('Both video and thumbnail files are required.');
+        }
+
+        try {
+            // Upload video to Cloudinary
+            const videoUploadResult = await cloudinary.uploader.upload(videoFile.path, {
+                resource_type: "video",
+                folder: "videos"
+            });
+
+            // Upload thumbnail to Cloudinary
+            const thumbnailUploadResult = await cloudinary.uploader.upload(thumbnailFile.path, {
+                resource_type: "image",
+                folder: "thumbnails"
+            });
+
+            // Get video duration
+            const duration = await getVideoDurationInSeconds(videoUploadResult.secure_url);
+            const hours = Math.floor(duration / 3600);
+            const minutes = Math.floor((duration % 3600) / 60);
+            const seconds = Math.floor(duration % 60);
+
+            // Insert video data into the database
+            const videoData = {
+                filePath: videoUploadResult.secure_url,
+                createdAt: new Date().getTime(),
+                views: 0,
+                watch: new Date().getTime(),
+                minutes,
+                seconds,
+                hours,
+                title,
+                description,
+                tags,
+                category,
+                thumbnail: thumbnailUploadResult.secure_url
+            };
+
+            database.collection('videos').insertOne(videoData, (err, data) => {
+                if (err) {
+                    console.error('Error saving video to database:', err);
+                    return res.status(500).send('Database error.');
+                }
+
+                // Update the user's video list
+                database.collection('users').updateOne(
+                    { _id: ObjectId(req.session.user_id) },
+                    { $push: { videos: { ...videoData, _id: data.insertedId } } },
+                    (err) => {
+                        if (err) {
+                            console.error('Error updating user with video:', err);
+                            return res.status(500).send('Error updating user with video.');
+                        }
+
+                        res.redirect(`/videos`);
+                    }
+                );
+            });
+        } catch (uploadError) {
+            console.error('Upload error:', uploadError);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+});
+
+
+app.post('/uploades', (req, res) => {
     if (req.session && req.session.user_id) {
         const form = new formidable.IncomingForm();
         form.keepExtensions = true; // Keep file extensions
