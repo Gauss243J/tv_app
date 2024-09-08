@@ -664,7 +664,7 @@ app.post('/upload', (req, res) => {
 		 console.error(thumbnailUploadResult);
 		    
 		
-		const duration = await getVideoDurationInSeconds(videoUploadResult.secure_url);
+		const duration = videoUploadResult.duration;//await getVideoDurationInSeconds(videoUploadResult.secure_url);
 		const hours = Math.floor(duration / 3600);
 		const minutes = Math.floor((duration % 3600) / 60);
 		const seconds = Math.floor(duration % 60);
