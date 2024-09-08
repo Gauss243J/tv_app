@@ -1,9 +1,9 @@
 var dotenv= require('dotenv');
 dotenv.config({path: './Config.env'});
 console.log(process.env.ClOUDINARY_CLOUD_NAME);
-console.log('Cloudinary Cloud Name:', process.env.CLOUDINARY_CLOUD_NAME);
-console.log('Cloudinary API Key:', process.env.CLOUDINARY_PUBLIC_KEY);
-console.log('Cloudinary API Secret:', process.env.CLOUDINARY_SECRET_KEY);
+console.log(process.env.CLOUDINARY_CLOUD_NAME);
+console.log(process.env.CLOUDINARY_PUBLIC_KEY);
+console.log(process.env.CLOUDINARY_SECRET_KEY);
 
 const express = require("express");
 const app = express();
