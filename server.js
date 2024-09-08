@@ -1,3 +1,5 @@
+var dotenv= require('dotenv');
+dotenv.config({path: './Config.env'});
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
@@ -13,7 +15,7 @@ const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const { getVideoDurationInSeconds } = require('get-video-duration');
           
-require('dotenv').config({ path: './Config.env' });
+//require('dotenv').config({ path: './Config.env' });
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
