@@ -1,13 +1,6 @@
 var dotenv= require('dotenv');
 dotenv.config({path: './Config.env'});
 
-console.log(process.env.ClOUDINARY_CLOUD_NAME);
-console.log(process.env.ClOUDINARY_CLOUD_NAME);
-console.log(process.env.CLOUDINARY_CLOUD_NAME);
-console.log(process.env.CLOUDINARY_PUBLIC_KEY);
-console.log(process.env.CLOUDINARY_SECRET_KEY);
-console.log(process.env);
-
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
@@ -26,8 +19,8 @@ const { getVideoDurationInSeconds } = require('get-video-duration');
 
 console.log('Cloudinary env :', process.env);
 console.log('Cloudinary Cloud Name2:', process.env.ClOUDINARY_CLOUD_NAME);
-console.log('Cloudinary API Key2:', process.env.CLOUDINARY_PUBLIC_KEY);
-console.log('Cloudinary API Secret2:', process.env.CLOUDINARY_SECRET_KEY);
+console.log('Cloudinary API Key2:', process.env.ClOUDINARY_PUBLIC_KEY);
+console.log('Cloudinary API Secret2:', process.env.ClOUDINARY_SECRET_KEY);
 
 cloudinary.config({
     cloud_name: process.env.ClOUDINARY_CLOUD_NAME,
@@ -557,7 +550,7 @@ app.post('/uploads', (req, res) => {
     }
 });
 
-app.post('/upload', (req, res) => {
+app.post('/upload-video', (req, res) => {
     if (!req.session || !req.session.user_id) {
         return res.status(401).json({ status: 'error', message: 'Please login to perform this action.' });
     }
@@ -646,7 +639,7 @@ app.post('/upload', (req, res) => {
 });
 
 
-app.post('/uploades', (req, res) => {
+app.post('/upload', (req, res) => {
     if (req.session && req.session.user_id) {
         const form = new formidable.IncomingForm();
         form.keepExtensions = true; // Keep file extensions
@@ -660,6 +653,10 @@ app.post('/uploades', (req, res) => {
             const { title, description, tags, category } = fields;
             const videoFile = files.video;
             const thumbnailFile = files.thumbnail;
+
+	    console.log(process.env.ClOUDINARY_CLOUD_NAME);
+    	    console.log(process.env.ClOUDINARY_SECRET_KEY);
+            console.log(process.env.ClOUDINARY_PUBLIC_KEY);
 
             try {
                 // Upload video to Cloudinary
