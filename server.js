@@ -9,35 +9,19 @@ const ObjectId = require("mongodb").ObjectId;
 const bodyParser = require("body-parser");
 const expressSession = require("express-session");
 const bcrypt = require("bcryptjs");
-//const cloudinary = require('cloudinary').v2;
-const path = require('path');
-//const { getVideoDurationInSeconds } = require('get-video-duration');
-
 const cloudinary = require('cloudinary').v2;
+const path = require('path');
 const { getVideoDurationInSeconds } = require('get-video-duration');
+          
+require('dotenv').config({ path: './Config.env' });
 
-// Vous n'avez pas besoin de dotenv si vous utilisez Render pour gérer les variables d'environnement
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_PUBLIC_KEY,
     api_secret: process.env.CLOUDINARY_SECRET_KEY
 });
 
-// Vérification des variables d'environnement (à supprimer après vérification)
-console.log('Cloudinary Cloud Name:', process.env.CLOUDINARY_CLOUD_NAME);
-console.log('Cloudinary API Key:', process.env.CLOUDINARY_PUBLIC_KEY);
-console.log('Cloudinary API Secret:', process.env.CLOUDINARY_SECRET_KEY);
-
-          
-//require('dotenv').config({ path: './Config.env' });
-//require('dotenv').config();
-
-/*cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_PUBLIC_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET_KEY
-});
-console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);*/
+console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
 
 let database = null;
 
