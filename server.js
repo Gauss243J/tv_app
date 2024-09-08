@@ -15,14 +15,14 @@ const { getVideoDurationInSeconds } = require('get-video-duration');
 
           
 //require('dotenv').config({ path: './Config.env' });
-require('dotenv').config();
+//require('dotenv').config();
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_PUBLIC_KEY,
     api_secret: process.env.CLOUDINARY_SECRET_KEY
 });
-
+console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
 let database = null;
 
 app.use(bodyParser.json({ limit: "10000mb" }));
