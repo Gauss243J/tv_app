@@ -1,11 +1,12 @@
 var dotenv= require('dotenv');
 dotenv.config({path: './Config.env'});
-console.log(process.env);
+
 console.log(process.env.ClOUDINARY_CLOUD_NAME);
 console.log(process.env.ClOUDINARY_CLOUD_NAME);
 console.log(process.env.CLOUDINARY_CLOUD_NAME);
 console.log(process.env.CLOUDINARY_PUBLIC_KEY);
 console.log(process.env.CLOUDINARY_SECRET_KEY);
+console.log(process.env);
 
 const express = require("express");
 const app = express();
@@ -24,7 +25,7 @@ const cloudinary = require('cloudinary').v2;
 const { getVideoDurationInSeconds } = require('get-video-duration');
 
 console.log('Cloudinary env :', process.env);
-console.log('Cloudinary Cloud Name2:', process.env.CLOUDINARY_CLOUD_NAME);
+console.log('Cloudinary Cloud Name2:', process.env.ClOUDINARY_CLOUD_NAME);
 console.log('Cloudinary API Key2:', process.env.CLOUDINARY_PUBLIC_KEY);
 console.log('Cloudinary API Secret2:', process.env.CLOUDINARY_SECRET_KEY);
 
@@ -563,7 +564,9 @@ app.post('/upload', (req, res) => {
 
     const form = new formidable.IncomingForm();
     form.keepExtensions = true;
-    console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
+    console.log(process.env.ClOUDINARY_CLOUD_NAME);
+    console.log(process.env.ClOUDINARY_SECRET_KEY);
+    console.log(process.env.ClOUDINARY_PUBLIC_KEY);
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
@@ -593,12 +596,12 @@ app.post('/upload', (req, res) => {
                 folder: "thumbnails"
             });
 
-            // Get video duration
             const duration = await getVideoDurationInSeconds(videoUploadResult.secure_url);
-            const hours = Math.floor(duration / 3600);
-            const minutes = Math.floor((duration % 3600) / 60);
-            const seconds = Math.floor(duration % 60);
-
+			const hours = Math.floor(duration / 3600);
+			const minutes = Math.floor((duration % 3600) / 60);
+			const seconds = Math.floor(duration % 60);
+			const currentTime = Date.now();
+            
             // Insert video data into the database
             const videoData = {
                 filePath: videoUploadResult.secure_url,
