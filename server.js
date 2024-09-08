@@ -1,5 +1,6 @@
 var dotenv= require('dotenv');
 dotenv.config({path: './Config.env'});
+
 console.log(process.env.ClOUDINARY_CLOUD_NAME);
 console.log(process.env.CLOUDINARY_CLOUD_NAME);
 console.log(process.env.CLOUDINARY_PUBLIC_KEY);
