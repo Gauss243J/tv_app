@@ -1,5 +1,7 @@
 var dotenv= require('dotenv');
 dotenv.config({path: './Config.env'});
+console.log(process.env.ClOUDINARY_CLOUD_NAME);
+
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
@@ -11,11 +13,13 @@ const ObjectId = require("mongodb").ObjectId;
 const bodyParser = require("body-parser");
 const expressSession = require("express-session");
 const bcrypt = require("bcryptjs");
-const cloudinary = require('cloudinary').v2;
 const path = require('path');
+
+const cloudinary = require('cloudinary').v2;
 const { getVideoDurationInSeconds } = require('get-video-duration');
           
 //require('dotenv').config({ path: './Config.env' });
+console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -23,7 +27,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET_KEY
 });
 
-console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
+
 
 let database = null;
 
