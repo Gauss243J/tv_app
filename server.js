@@ -21,8 +21,6 @@ const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const { getVideoDurationInSeconds } = require('get-video-duration');
           
-//require('dotenv').config({ path: './Config.env' });
-//console.log(process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_PUBLIC_KEY, process.env.CLOUDINARY_SECRET_KEY);
 console.log('Cloudinary Cloud Name2:', process.env.CLOUDINARY_CLOUD_NAME);
 console.log('Cloudinary API Key2:', process.env.CLOUDINARY_PUBLIC_KEY);
 console.log('Cloudinary API Secret2:', process.env.CLOUDINARY_SECRET_KEY);
