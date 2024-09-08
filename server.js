@@ -637,34 +637,38 @@ app.post('/upload', (req, res) => {
         form.keepExtensions = true; // Keep file extensions
 
         form.parse(req, async (err, fields, files) => {
-            if (err) {
-                console.error('Error parsing form:', err);
-                return res.status(500).send('Internal Server Error');
-            }
+		if (err) {
+			console.error('Error parsing form:', err);
+	                return res.status(500).send('Internal Server Error');
+		}
 
-            const { title, description, tags, category } = fields;
-            const videoFile = files.video;
-            const thumbnailFile = files.thumbnail;
+	    	const videoFile = files.video;
+		const thumbnailFile = files.thumbnail;
+		// Validate file types and sizes here
+		const { title, description, tags, category } = fields;
 
             try {
-                // Upload video to Cloudinary
-                const videoUploadResult = await cloudinary.uploader.upload(videoFile.path, {
-                    resource_type: "video",
-                    folder: "videos"
-                });
-		console.log(videoUploadResult);
-                // Upload thumbnail to Cloudinary
-                const thumbnailUploadResult = await cloudinary.uploader.upload(thumbnailFile.path, {
-                    resource_type: "image",
-                    folder: "thumbnails"
-                });
-		console.log(thumbnailUploadResult );
-
-                // Get video duration
-                const duration = await getVideoDurationInSeconds(videoUploadResult.secure_url);
-                const hours = Math.floor(duration / 3600);
-                const minutes = Math.floor((duration % 3600) / 60);
-                const seconds = Math.floor(duration % 60);
+		// Upload video to Cloudinary
+		const videoUploadResult = await cloudinary.uploader.upload(videoFile.path, {
+			resource_type: "video",
+			folder: "videos"
+		});
+		console.error(videoUploadResult);
+		
+		// Upload thumbnail to Cloudinary
+		const thumbnailUploadResult = await cloudinary.uploader.upload(thumbnailFile.path, {
+			resource_type: "image",
+			folder: "thumbnails"
+		});
+						
+		 console.error(thumbnailUploadResult);
+		    
+		
+		const duration = await getVideoDurationInSeconds(videoUploadResult.secure_url);
+		const hours = Math.floor(duration / 3600);
+		const minutes = Math.floor((duration % 3600) / 60);
+		const seconds = Math.floor(duration % 60);
+		const currentTime = Date.now();
 
                 // Insert video data into the database
                 const videoData = {
