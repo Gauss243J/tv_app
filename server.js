@@ -646,22 +646,19 @@ app.post('/upload', (req, res) => {
             const videoFile = files.video;
             const thumbnailFile = files.thumbnail;
 
-	    console.log(process.env.ClOUDINARY_CLOUD_NAME);
-    	    console.log(process.env.ClOUDINARY_SECRET_KEY);
-            console.log(process.env.ClOUDINARY_PUBLIC_KEY);
-
             try {
                 // Upload video to Cloudinary
                 const videoUploadResult = await cloudinary.uploader.upload(videoFile.path, {
                     resource_type: "video",
                     folder: "videos"
                 });
-
+		console.log(videoUploadResult);
                 // Upload thumbnail to Cloudinary
                 const thumbnailUploadResult = await cloudinary.uploader.upload(thumbnailFile.path, {
                     resource_type: "image",
                     folder: "thumbnails"
                 });
+		console.log(thumbnailUploadResult );
 
                 // Get video duration
                 const duration = await getVideoDurationInSeconds(videoUploadResult.secure_url);
