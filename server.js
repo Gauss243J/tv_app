@@ -17,11 +17,6 @@ const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const { getVideoDurationInSeconds } = require('get-video-duration');
 
-console.log('Cloudinary env :', process.env);
-console.log('Cloudinary Cloud Name2:', process.env.ClOUDINARY_CLOUD_NAME);
-console.log('Cloudinary API Key2:', process.env.ClOUDINARY_PUBLIC_KEY);
-console.log('Cloudinary API Secret2:', process.env.ClOUDINARY_SECRET_KEY);
-
 cloudinary.config({
     cloud_name: process.env.ClOUDINARY_CLOUD_NAME,
     api_key: process.env.ClOUDINARY_PUBLIC_KEY,
@@ -557,9 +552,6 @@ app.post('/upload-video', (req, res) => {
 
     const form = new formidable.IncomingForm();
     form.keepExtensions = true;
-    console.log(process.env.ClOUDINARY_CLOUD_NAME);
-    console.log(process.env.ClOUDINARY_SECRET_KEY);
-    console.log(process.env.ClOUDINARY_PUBLIC_KEY);
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
