@@ -634,7 +634,7 @@ app.post('/upload-video', (req, res) => {
 app.post('/upload', (req, res) => {
     if (req.session && req.session.user_id) {
         const form = new formidable.IncomingForm();
-        form.keepExtensions = true; // Keep file extensions
+	formData.maxFileSize = 1000 * 1024 * 1204;
 
         form.parse(req, async (err, fields, files) => {
 		if (err) {
